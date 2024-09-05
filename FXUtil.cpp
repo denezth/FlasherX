@@ -110,24 +110,10 @@ void update_firmware( Stream *in, Stream *out,
     out->printf( "abort - new code missing string %s\n", FLASH_ID );
     return;
   }
-  
-  // get user input to write to flash or abort
-  int user_lines = -1;
-  while (user_lines != hex.lines && user_lines != 0) {
-    out->printf( "enter %d to flash or 0 to abort\n", hex.lines );
-    read_ascii_line( out, line, sizeof(line) );
-    sscanf( line, "%d", &user_lines );
-  }
-  
-  if (user_lines == 0) {
-    out->printf( "abort - user entered 0 lines\n" );
-    return;
-  }
-  else {
-    out->printf( "calling flash_move() to load new firmware...\n" );
-    out->flush();
-  }
-  
+
+  out->printf( "loading the new firmware...\n" );
+  out->flush();
+
   // move new program from buffer to flash, free buffer, and reboot
   flash_move( FLASH_BASE_ADDR, buffer_addr, hex.max-hex.min );
 
